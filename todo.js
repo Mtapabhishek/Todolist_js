@@ -2,12 +2,28 @@ let tasks = [];
 const tasksList = document.getElementById("list");
 const addTaskInputBox = document.getElementById("add-task");
 
-function addTodo (task) {
+function addTodo(task) {
+
+  let flag = false;
+  tasks.forEach(t => {
+
+    console.log(t.text.includes(task.text));
+    if (t.text.includes(task.text)) {
+
+      flag = true;
+    }
+  });
+
+  if (flag) {
+    alert("already in the list")
+    return;
+  }
   tasks.push(task);
+
   renderList();
 }
 
-function deleteTodo (taskId) {
+function deleteTodo(taskId) {
   const newTasks = tasks.filter(function (task) {
     return task.id !== taskId;
   });
@@ -23,18 +39,14 @@ function renderList() {
     const task = tasks[i];
 
     li.innerHTML = `
-      <input type="checkbox" id="${task.id}" />
-      <label for="${task.id}">${task.text}</label>
-      <button data-taskId="${task.id}" data-test="test" class="select">Select</button>
-    `;
+     <input type="checkbox" id="${task.id}" />
+     <label for="${task.id}">${task.text}</label>
+     <button data-taskId="${task.id}" data-test="test" class="select">Select</button>
+   `;
     tasksList.appendChild(li);
   }
-  
 }
-
-
-
-function checkTodo (taskId) {
+function checkTodo(taskId) {
   const taskIndex = tasks.findIndex(function (task) {
     return task.id === taskId
   });
@@ -42,37 +54,29 @@ function checkTodo (taskId) {
   tasks[taskIndex].done = !tasks[taskIndex].done;
 }
 
-function handleClick(event) {
-  console.log(event.target.className);
- 
-      if(event.key ==='Delete' || event.key==='Backspace'){
-    const taskid = Number(event.target.dataset.taskid);
-    deleteTodo(taskid);
-      }
-  
-}
-
 function initialize() {
-  document.addEventListener('keydown', handleClick);
-  document.addEventListener('keyup', function (e) {
-    const text = e.target.value;
-    if (e.key === 'Enter') {
-    console.log("initialize -> text", text)
 
-        const task = {
-          text: text,
-          id: Date.now(),
-          done: false
-        }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      const taskid = Number(e.target.dataset.taskid);
 
-        addTodo(task);
-        
+      deleteTodo(taskid);
     }
-    
-    
   });
-  renderList();
-  
 }
+document.getElementById('Add-task').addEventListener('keydown', function (evt) {
+  const text = evt.target.value;
+  if (evt.key === 'Enter') {
 
+
+    const task = {
+      text: text,
+      id: Date.now(),
+      done: false
+    }
+    addTodo(task);
+
+    renderList();
+  }
+});
 initialize();
