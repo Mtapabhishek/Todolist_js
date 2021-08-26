@@ -10,7 +10,7 @@ h1 {
     width: 500px;
     margin: 0 auto;
     border: 5px solid red;
-    height: 500px;
+    height:500px;
     margin-top: 50px;;
     background-color: orange;
     border-radius: 10%;
@@ -45,9 +45,32 @@ h1 {
 #list li:hover {
     background-color: #f1f1f1;
 }
+.select{
+    margin-left: 0px;
+}
 
 .select:hover {
     
     background-color: green;
     
+}
+#output {
+    margin-left: 50px;
+    background-color: rgb(9, 255, 0);
+}
+#input{
+    background-color: brown;
+    margin-top: 0px;
+}
+#dropcontainer{
+    background-color: lightgrey;
+  width: 450px;
+  height: 50px;
+  
+  padding: 5px;
+  margin: 1px;
+  margin-top: 40px;
+  border-radius: 10%;
+  margin-left: 20px;
+
 }
