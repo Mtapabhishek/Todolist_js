@@ -1,16 +1,15 @@
-let tasks = [[], [], []];  //Array of task
-let currIndex = 0;
+let tasks = [];  //Array of task
+let currentTaskIndex = 0;
+let currentTask=[]
+
 
 const tasksList = document.getElementById("list");  //grab the list
 const addTaskInputBox = document.getElementById("Add-task"); //we have to select the input box with id add-task
 
-
-
-
 function addTodo(task) {  //function to add todo list
 
   let flag = false;
-  tasks[currIndex].forEach(t => {
+  tasks.forEach(t => {
 
     console.log(t.text === task.text);
     if (t.text === task.text) {
@@ -23,25 +22,26 @@ function addTodo(task) {  //function to add todo list
     alert("already in the list")
     return;
   }
-  tasks[currIndex].push(task); //adding stuff to the tasks array
+  tasks.push(task); //adding stuff to the tasks array
 
   renderList();
 }
 
 function deleteTodo(taskId) { //function to delete todo list it will basically delete the items and taskId here is differentiater
-  const newTasks = tasks[currIndex].filter(function (task) {//here task.filter will give new array after filtering
+  const newTasks = tasks.filter(function (task) {//here task.filter will give new array after filtering
     return task.id !== taskId; //get all the task wich not equal to taskId 
   });
 
-  tasks[currIndex] = newTasks;
+  tasks = newTasks;
   renderList();
 }
 //var li;
 function renderList() {
   tasksList.innerHTML = '';
-  for (let i = 0; i < tasks[currIndex].length; i++) {
+  currentTask=tasks.filter(t=>t.type===currentTaskIndex)
+  for (let i = 0; i < currentTask.length; i++) {
     const li = document.createElement('li');//here we are creating the element using li tag and pushin it to the dom
-    const task = tasks[currIndex][i];
+    const task = currentTask[i];
 
     li.innerHTML = `  
      <input type="checkbox" id="${task.id}" class="check" />
@@ -61,22 +61,33 @@ function renderList() {
 }
 
 
-let selection = document.querySelector('select');
+var selection = document.querySelector('select');
+  var options=["Personal","Official","Market", "Hospital"];
 
-
-selection.addEventListener('change', () => {
-  currIndex = Number(selection.value);
-  renderList();
-})
-
+ 
+  for(var i=0;i<options.length; i++) {
+    var opt =options[i];
+    var el=document.createElement("option");
+    el.textContent =opt;
+    el.value =i;
+    selection.appendChild(el)
+    
+    //renderList()
+  }
+  
+  selection.addEventListener('change', () => {
+     
+    currentTaskIndex = Number(selection.value);
+    
+    //console.log(currentTask);
+    renderList();
+  })
 
 function initialize() {
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Delete' || e.key === 'Backspace') {
       const taskid = Number(e.target.dataset.taskid);//grab it in taskid
-
-
       deleteTodo(taskid);
     }
 
@@ -89,19 +100,16 @@ function initialize() {
 document.getElementById('Add-task').addEventListener('keydown', function (evt) {
   const text = evt.target.value;
   if (evt.key === 'Enter') {
-
-
     const task = {
       text: text,
       id: Date.now(),
-      done: false
+      done: false,
+      type:currentTaskIndex 
     }
     addTodo(task);
-
     renderList();
-
     addTaskInputBox.value = "";
-    //checkTodo();
+    
   }
 
 });
